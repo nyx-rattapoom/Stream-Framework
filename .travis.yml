@@ -1,5 +1,7 @@
 language: python
+dist: precise
 python:
+  - 3.6
   - 3.5
   - 3.4
   - 2.7
@@ -9,10 +11,6 @@ addons:
     packages:
     - libev4
     - libev-dev
-notifications:
-  email:
-    - tbarbugli@gmail.com
-    - thierryschellenbach@gmail.com
 cache: pip
 env:
   - CASSANDRA_DRIVER="3.7.1"
