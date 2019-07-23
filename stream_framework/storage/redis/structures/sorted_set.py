@@ -1,7 +1,6 @@
 from stream_framework.utils.functional import lazy
 from stream_framework.storage.redis.structures.hash import BaseRedisHashCache
 from stream_framework.storage.redis.structures.list import BaseRedisListCache
-from stream_framework.utils import chunks
 import six
 import logging
 logger = logging.getLogger(__name__)
@@ -59,13 +58,10 @@ class RedisSortedSetCache(BaseRedisListCache, BaseRedisHashCache):
         results = []
 
         def _add_many(redis, score_value_pairs):
-            score_value_list = sum(map(list, score_value_pairs), [])
-            score_value_chunks = chunks(score_value_list, 200)
-
-            for score_value_chunk in score_value_chunks:
-                result = redis.zadd(key, *score_value_chunk)
-                logger.debug('adding to %s with score_value_chunk %s',
-                             key, score_value_chunk)
+            for score, value in score_value_pairs:
+                result = redis.zadd(key, {value: score})
+                logger.debug('adding to %s with value %s and score %s',
+                             key, value, score)
                 results.append(result)
             return results
 
